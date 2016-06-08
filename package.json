@@ -1,0 +1,67 @@
+{
+    "name": "vscode-linter-erlc",
+    "displayName": "vscode-linter-erlc",
+    "description": "Erlang linter for VSCode using erlc",
+    "version": "0.1",
+    "publisher": "NigelRook",
+    "engines": {
+        "vscode": "^1.0.0"
+    },
+    "categories": [
+        "Linters"
+    ],
+    "activationEvents": [
+        "onLanguage:erlang"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "configuration": {
+            "properties": {
+                "erlang.linter-erlc.executablePath": {
+                    "type": "string",
+                    "default": "erlc",
+                    "description": "Points to the erlc exectuable."
+                },
+                "erlang.linter-erlc.run": {
+                    "type": "string",
+                    "enum": ["onSave", "onType", "off"],
+                    "default": "onType",
+                    "description": "Whether the linter is run on save or on type or disabled."
+                },
+                "erlang.linter-erlc.include": {
+                    "type": "array",
+                    "default": ["${directory}", "${directory}/../include"],
+                    "description": "Include paths."
+                },
+                "erlang.linter-erlc.pa": {
+                    "type": "array",
+                    "default": [],
+                    "description": "pa paths."
+                },
+                "erlang.linter-erlc.pz": {
+                    "type": "array",
+                    "default": [],
+                    "description": "pz paths."
+                },
+                "erlang.linter-erlc.deps": {
+                    "type": "array",
+                    "default": [],
+                    "description": "deps directories."
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "dependencies": {
+        "tempfile": "*"
+    },
+    "devDependencies": {
+        "typescript": "^1.8.5",
+        "vscode": "^0.11.0",
+        "tempfile": "*"
+    }
+}
