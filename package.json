@@ -2,13 +2,19 @@
     "name": "vscode-linter-erlc",
     "displayName": "vscode-linter-erlc",
     "description": "Erlang linter for VSCode using erlc",
+    "image": "./images/erlang-logo128.png",
     "version": "0.1",
     "publisher": "NigelRook",
+    "license": "SEE LICENSE IN LICENSE.txt",
     "engines": {
         "vscode": "^1.0.0"
     },
     "categories": [
         "Linters"
+    ],
+    "keywords": [
+        "erlang",
+        "erlc"
     ],
     "activationEvents": [
         "onLanguage:erlang"

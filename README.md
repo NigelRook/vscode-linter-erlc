@@ -29,6 +29,8 @@ This extension contributes the following settings:
 
 Based on [hoovercj's ruby linter](https://github.com/hoovercj/vscode-ruby-linter), which in turn is based on Microsoft's own PHPValidationProvider.
 
+Logo lifted from the [Erlang/OTP source](https://github.com/erlang/otp)
+
 ## Release Notes
 
 ### 0.1
