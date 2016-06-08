@@ -5,6 +5,14 @@
     "image": "./images/erlang-logo128.png",
     "version": "0.1",
     "publisher": "NigelRook",
+    "homepage": "https://github.com/NigelRook/vscode-linter-erlc",
+    "bugs": {
+        "url": "https://github.com/NigelRook/vscode-linter-erlc/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/NigelRook/vscode-linter-erlc.git"
+    },
     "license": "SEE LICENSE IN LICENSE.txt",
     "engines": {
         "vscode": "^1.0.0"
