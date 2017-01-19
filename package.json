@@ -71,7 +71,8 @@
         "postinstall": "node ./node_modules/vscode/bin/install"
     },
     "dependencies": {
-        "tempfile": "*"
+        "tempfile": "*",
+        "glob": "*"
     },
     "devDependencies": {
         "typescript": "^1.8.5",

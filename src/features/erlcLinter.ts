@@ -1,6 +1,7 @@
 'use strict';
 import * as path from 'path';
 import * as fs from 'fs';
+var glob = require('glob');
 
 import { workspace, Disposable, Diagnostic, DiagnosticSeverity, Range, TextDocument } from 'vscode';
 
@@ -42,6 +43,13 @@ export default class ErlcLintingProvider implements Linter {
         let include = this.substituteDirs(this.include, fileDir, projectDir);
         let pa = this.substituteDirs(this.pa, fileDir, projectDir);
         let pz = this.substituteDirs(this.pz, fileDir, projectDir);
+
+        include = include.map((path) => this.expandGlobs(path))
+                         .reduce((acc, paths) => acc.concat(paths), []);
+        pa = pa.map((path) => this.expandGlobs(path))
+               .reduce((acc, paths) => acc.concat(paths), []);
+        pz = pz.map((path) => this.expandGlobs(path))
+               .reduce((acc, paths) => acc.concat(paths), []);
 
         let deps = depsDirs.map(this.getDeps)
                            .reduce((acc, dep) => acc.concat(dep), []);
@@ -89,6 +97,10 @@ export default class ErlcLintingProvider implements Linter {
             }
             return true;
         }).map((dir) => path.join(depsDir, dir, 'ebin'));
+    }
+
+    private expandGlobs(param:string): string[] {
+        return glob.sync(param);
     }
 
     private makeParams(type:string, params:string[]): string[] {
