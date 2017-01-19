@@ -35,6 +35,11 @@ Logo lifted from the [Erlang/OTP source](https://github.com/erlang/otp)
 
 ## Release Notes
 
+### 0.2
+
+* Support gopbs for include/pa/pz
+* Lint .hrl files properly
+
 ### 0.1
 
 Initial release of vscode-linter-erlc
