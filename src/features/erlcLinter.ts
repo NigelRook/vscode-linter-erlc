@@ -108,7 +108,7 @@ export default class ErlcLintingProvider implements Linter {
                      .reduce((acc, params) => acc.concat(params), []);
     }
 
-    public process(lines: string[]): Diagnostic[] {
+    public process(lines: string[], outputLineOffset: number = 0): Diagnostic[] {
         let diagnostics: Diagnostic[] = [];
         lines.forEach(function (line) {
             const regex = /.+:(\d+):\s*(.+:)?\s(.+)/;
@@ -116,8 +116,9 @@ export default class ErlcLintingProvider implements Linter {
             if (matches === null) {
               return;
             }
+            let lineNum = parseInt(matches[1]) - 1 - outputLineOffset;
             diagnostics.push({
-                range: new Range(parseInt(matches[1]) - 1, 0, parseInt(matches[1]) - 1, Number.MAX_VALUE),
+                range: new Range(lineNum, 0, lineNum, Number.MAX_VALUE),
                 severity: !matches[2] || matches[2].toLowerCase().includes("error") ? DiagnosticSeverity.Error : DiagnosticSeverity.Warning,
                 message: matches[3],
                 code: null,

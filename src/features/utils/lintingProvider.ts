@@ -6,6 +6,8 @@ import * as vscode from 'vscode';
 
 import * as fs from 'fs';
 
+import * as path from 'path';
+
 let tempfile = require('tempfile');
 
 import { ThrottledDelayer } from './async';
@@ -44,7 +46,7 @@ export interface Linter {
     languageId:string,
     loadConfiguration:()=>LinterConfiguration,
     getTargetArgs:(textDocument:vscode.TextDocument) => string[],
-    process:(output:string[])=>vscode.Diagnostic[]
+    process:(output:string[], outputLineOffset:number)=>vscode.Diagnostic[]
 }
 
 export class LintingProvider {
@@ -134,10 +136,22 @@ export class LintingProvider {
             args = args.concat(this.linterConfiguration.extraArgs);
             args = args.concat(this.linter.getTargetArgs(textDocument));
             let tempFile:string;
+            let outputLineOffset = 0;
             if (RunTrigger.from(this.linterConfiguration.runTrigger) === RunTrigger.onSave) {
                 args.push(textDocument.fileName);
             } else {
-                tempFile = this.writeTempFile(textDocument.getText());
+                let ext = '.erl';
+                if (textDocument.fileName) {
+                    ext = path.extname(textDocument.fileName);
+                    if (ext === '') { ext = '.erl' }
+                }
+                let pre = '';
+                if (ext === '.hrl') {
+                    pre = '-module(dummy).\n-compile([no_error_module_mismatch, nowarn_unused_record, nowarn_unused_function]).\n'
+                    ext = '.erl';
+                    outputLineOffset = 2;
+                }
+                tempFile = this.writeTempFile(pre+textDocument.getText(), ext);
                 args.push(tempFile);
             }
 
@@ -167,7 +181,7 @@ export class LintingProvider {
                 decoder.end();
                 let lines = decoder.getLines();
                 if (lines && lines.length > 0) {
-                    diagnostics = this.linter.process(lines);
+                    diagnostics = this.linter.process(lines, outputLineOffset);
                 }
                 this.diagnosticCollection.set(textDocument.uri, diagnostics);
                 resolve();
@@ -184,8 +198,8 @@ export class LintingProvider {
         });
     }
 
-    private writeTempFile(text:string):string {
-        let filename = tempfile('.erl');
+    private writeTempFile(text:string, ext:string):string {
+        let filename = tempfile(ext);
         fs.writeFileSync(filename, text);
         return filename;
     }
