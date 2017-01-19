@@ -3,7 +3,7 @@
     "displayName": "vscode-linter-erlc",
     "description": "Erlang linter for VSCode using erlc",
     "image": "./images/erlang-logo128.png",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "publisher": "NigelRook",
     "homepage": "https://github.com/NigelRook/vscode-linter-erlc",
     "bugs": {
@@ -38,13 +38,20 @@
                 },
                 "erlang.linter-erlc.run": {
                     "type": "string",
-                    "enum": ["onSave", "onType", "off"],
+                    "enum": [
+                        "onSave",
+                        "onType",
+                        "off"
+                    ],
                     "default": "onType",
                     "description": "Whether the linter is run on save or on type or disabled."
                 },
                 "erlang.linter-erlc.include": {
                     "type": "array",
-                    "default": ["${directory}", "${directory}/../include"],
+                    "default": [
+                        "${directory}",
+                        "${directory}/../include"
+                    ],
                     "description": "Include paths."
                 },
                 "erlang.linter-erlc.pa": {
