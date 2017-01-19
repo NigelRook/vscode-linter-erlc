@@ -10,6 +10,8 @@ Supports deps directories (essentially does -pa deps/**/ebin)
 
 Supports substituting `${directory}` and `${workspaceRoot}` in paths with the current file's directory and the workspace's top level directory respectively
 
+Supports glob patterns in non-deps paths (eg. `"erlang.linter-erlc.include":"**/include"`)
+
 ## Requirements
 
 erlc on your path, or wherever you configure it to be.
