@@ -58,6 +58,7 @@ export class LintingProvider {
     private documentListener: vscode.Disposable;
     private diagnosticCollection: vscode.DiagnosticCollection;
     private delayers: { [key: string]: ThrottledDelayer<void> };
+    private outputChannel: vscode.OutputChannel;
 
 
     private linter:Linter;
@@ -80,6 +81,7 @@ export class LintingProvider {
 
         // Lint all open documents documents
         vscode.workspace.textDocuments.forEach(this.triggerLint, this);
+        this.outputChannel = vscode.window.createOutputChannel("linter-erlc");
     }
 
     public dispose(): void {
@@ -195,6 +197,8 @@ export class LintingProvider {
             } else {
                 resolve();
             }
+        }).catch((reason: any) => {
+            this.outputChannel.appendLine(`Linting error: ${reason.message}`);
         });
     }
 
