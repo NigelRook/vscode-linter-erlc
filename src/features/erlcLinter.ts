@@ -110,21 +110,48 @@ export default class ErlcLintingProvider implements Linter {
 
     public process(lines: string[], outputLineOffset: number = 0): Diagnostic[] {
         let diagnostics: Diagnostic[] = [];
-        lines.forEach(function (line) {
-            const regex = /.+:(\d+):\s*(.+:)?\s(.+)/;
-            const matches = regex.exec(line);
-            if (matches === null) {
-              return;
+        lines.forEach((line) => {
+            const withLineNum = this.processWithLineNum(line, outputLineOffset);
+            if (withLineNum) {
+                diagnostics.push(withLineNum);
+                return;
             }
-            let lineNum = parseInt(matches[1]) - 1 - outputLineOffset;
-            diagnostics.push({
-                range: new Range(lineNum, 0, lineNum, Number.MAX_VALUE),
-                severity: !matches[2] || matches[2].toLowerCase().includes("error") ? DiagnosticSeverity.Error : DiagnosticSeverity.Warning,
-                message: matches[3],
-                code: null,
-                source: ''
-            });
+            const withoutLinenum = this.processWithoutLineNum(line);
+            if (withoutLinenum) {
+                diagnostics.push(withoutLinenum);
+            }
         });
         return diagnostics;
+    }
+
+    private processWithLineNum(line: string, outputLineOffset: number) : Diagnostic {
+        const regex = /\.erl:(\d+):\s([A-Za-z]+:)?\s(.+)/;
+        const matches = regex.exec(line);
+        if (matches === null) {
+            return null;
+        }
+        let lineNum = parseInt(matches[1]) - 1 - outputLineOffset;
+        return {
+            range: new Range(lineNum, 0, lineNum, Number.MAX_VALUE),
+            severity: !matches[2] || matches[2].toLowerCase().includes("error") ? DiagnosticSeverity.Error : DiagnosticSeverity.Warning,
+            message: matches[3],
+            code: null,
+            source: ''
+        };
+    }
+
+    private processWithoutLineNum(line: string) : Diagnostic {
+        const regex = /\.erl:\s*(.+)/;
+        const matches = regex.exec(line);
+        if (matches === null) {
+            return null;
+        }
+        return {
+            range: new Range(0, 0, 0, 0),
+            severity: DiagnosticSeverity.Error,
+            message: matches[1],
+            code: null,
+            source: ''
+        };
     }
 }
