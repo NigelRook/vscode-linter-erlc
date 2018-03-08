@@ -8,7 +8,7 @@ import * as fs from 'fs';
 
 import * as path from 'path';
 
-let tempfile = require('tempfile');
+let tempy = require('tempy');
 
 import { ThrottledDelayer } from './async';
 import { LineDecoder } from './lineDecoder';
@@ -142,18 +142,14 @@ export class LintingProvider {
             if (RunTrigger.from(this.linterConfiguration.runTrigger) === RunTrigger.onSave) {
                 args.push(textDocument.fileName);
             } else {
-                let ext = '.erl';
-                if (textDocument.fileName) {
-                    ext = path.extname(textDocument.fileName);
-                    if (ext === '') { ext = '.erl' }
-                }
+                let tempName = textDocument.fileName ? path.basename(textDocument.fileName) : 'dummy.erl';
                 let pre = '';
-                if (ext === '.hrl') {
+                if (path.extname(tempName) === '.hrl') {
                     pre = '-module(dummy).\n-compile([no_error_module_mismatch, nowarn_unused_record, nowarn_unused_function]).\n'
-                    ext = '.erl';
+                    tempName = 'dummy.erl';
                     outputLineOffset = 2;
                 }
-                tempFile = this.writeTempFile(pre+textDocument.getText(), ext);
+                tempFile = this.writeTempFile(tempName, pre+textDocument.getText());
                 args.push(tempFile);
             }
 
@@ -202,8 +198,8 @@ export class LintingProvider {
         });
     }
 
-    private writeTempFile(text:string, ext:string):string {
-        let filename = tempfile(ext);
+    private writeTempFile(name:string, text:string):string {
+        const filename = tempy.file({name: name});
         fs.writeFileSync(filename, text);
         return filename;
     }
