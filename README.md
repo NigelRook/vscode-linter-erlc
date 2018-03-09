@@ -35,9 +35,13 @@ Logo lifted from the [Erlang/OTP source](https://github.com/erlang/otp)
 
 ## Release Notes
 
+### 0.5.1
+
+* Fixes and improvements
+
 ### 0.3
 
-* Support gopbs for include/pa/pz
+* Support globs for include/pa/pz
 * Lint .hrl files properly
 
 ### 0.1
