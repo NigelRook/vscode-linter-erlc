@@ -125,7 +125,7 @@ export default class ErlcLintingProvider implements Linter {
     }
 
     private processWithLineNum(line: string, outputLineOffset: number) : Diagnostic {
-        const regex = /\.erl:(\d+):\s([A-Za-z]+:)?\s(.+)/;
+        const regex = /\.erl:(\d+):(\s[A-Za-z]+:)?\s(.+)/;
         const matches = regex.exec(line);
         if (matches === null) {
             return null;
